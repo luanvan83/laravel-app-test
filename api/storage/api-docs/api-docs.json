@@ -1,0 +1,426 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Swagger with Laravel",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/login": {
+            "post": {
+                "summary": "Handle an incoming authentication request.",
+                "operationId": "b24ea29ea6d57bd7691dc8c1aa3b44e9",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "User's email",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "user1@test.app"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "User's password",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "Passw0rd1"
+                        }
+                    },
+                    {
+                        "name": "X-Requested-With",
+                        "in": "header",
+                        "description": "Laravel Ajax",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "XMLHttpRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login successful"
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
+                    }
+                }
+            }
+        },
+        "/api/register": {
+            "post": {
+                "summary": "Handle an incoming registration request.",
+                "operationId": "18235ea6963e661c49bf381065779d6a",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "User's name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "User's email",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "User's password",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Requested-With",
+                        "in": "header",
+                        "description": "Laravel Ajax",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "XMLHttpRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully"
+                    },
+                    "422": {
+                        "description": "Validation errors"
+                    }
+                }
+            }
+        },
+        "/api/employees": {
+            "get": {
+                "tags": [
+                    "Employees"
+                ],
+                "summary": "Get list of employees",
+                "operationId": "551b721b5ecd43e9efeef0fe5c017855",
+                "parameters": [
+                    {
+                        "name": "X-Requested-With",
+                        "in": "header",
+                        "description": "Laravel Ajax",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "XMLHttpRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Employees"
+                ],
+                "summary": "Add employee",
+                "operationId": "dda62f3e8c1ab1699eb0e8024144b77d",
+                "parameters": [
+                    {
+                        "name": "firstname",
+                        "in": "query",
+                        "description": "Employee's firstname",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "lastname",
+                        "in": "query",
+                        "description": "Employee's lastname",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Employee's email",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "note",
+                        "in": "query",
+                        "description": "Note",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "restaurant_ids[]",
+                        "in": "query",
+                        "description": "Where the employee is working.",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        }
+                    },
+                    {
+                        "name": "X-Requested-With",
+                        "in": "header",
+                        "description": "Laravel Ajax",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "XMLHttpRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "422": {
+                        "description": "Validation errors"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/employees/{id}": {
+            "get": {
+                "tags": [
+                    "Employees"
+                ],
+                "summary": "Get employee detail",
+                "operationId": "6f10570c9b8b8e9f9f3ff1992d65b233",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Employee ID",
+                        "required": true
+                    },
+                    {
+                        "name": "X-Requested-With",
+                        "in": "header",
+                        "description": "Laravel Ajax",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "XMLHttpRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Employees"
+                ],
+                "summary": "Update employee",
+                "operationId": "46acf76cbee9308af7df0a81fa268fdd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Employee ID",
+                        "required": true
+                    },
+                    {
+                        "name": "firstname",
+                        "in": "query",
+                        "description": "Employee's firstname",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "lastname",
+                        "in": "query",
+                        "description": "Employee's lastname",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Employee's email",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "note",
+                        "in": "query",
+                        "description": "Note",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "restaurant_ids[]",
+                        "in": "query",
+                        "description": "Where the employee is working.",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        }
+                    },
+                    {
+                        "name": "X-Requested-With",
+                        "in": "header",
+                        "description": "Laravel Ajax",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "XMLHttpRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "422": {
+                        "description": "Validation errors"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Employees"
+                ],
+                "summary": "Delete employee",
+                "operationId": "5f9c83d45f202e3001bc1fecec8420b7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Employee ID",
+                        "required": true
+                    },
+                    {
+                        "name": "X-Requested-With",
+                        "in": "header",
+                        "description": "Laravel Ajax",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "XMLHttpRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "422": {
+                        "description": "Validation errors"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/restaurants": {
+            "get": {
+                "tags": [
+                    "Restaurants"
+                ],
+                "summary": "Get list of restaurants",
+                "operationId": "7a42e9c45e2130a0b4ee837ce49ad763",
+                "parameters": [
+                    {
+                        "name": "X-Requested-With",
+                        "in": "header",
+                        "description": "Laravel Ajax",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "XMLHttpRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            },
+            "sanctum": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    }
+}

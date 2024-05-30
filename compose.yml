@@ -1,0 +1,36 @@
+services:
+  api:
+    build: ./docker/php/
+    volumes:
+      - ./api:/var/www/html/app
+    environment:
+      - PHP_ENV=development
+      - DB_USERNAME=db_user_demo
+      - DB_PASSWORD=Dem0123?
+      - DB_DATABASE=db_demo
+      - DB_HOST=mysql
+    links:
+      - mysql
+
+  nginx:
+    build: ./docker/nginx
+    volumes:
+      - ./api:/var/www/html/app
+    ports:
+      - "80:80"
+    links:
+      - api
+
+  mysql:
+    build: ./docker/mysql/
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_ROOT_PASSWORD=R0Ot123?
+      - MYSQL_USER=db_user_demo
+      - MYSQL_PASSWORD=Dem0123?
+      - MYSQL_DATABASE=db_demo
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker/storage/mysql:/var/lib/mysql
+      - ./docker/mysql/custom:/etc/mysql/conf.d
