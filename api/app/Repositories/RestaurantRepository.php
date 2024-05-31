@@ -33,6 +33,6 @@ class RestaurantRepository extends BaseRepository implements IRestaurantReposito
             $query->wherePivot('employee_id', '<>', $ignoreEmployeeId);
         }
         $employeeCount = $query->count();
-        return $employeeCount <= Restaurant::MAX_EMPLOYEE;
+        return $employeeCount < Restaurant::MAX_EMPLOYEE;
     }
 }

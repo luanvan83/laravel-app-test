@@ -22,18 +22,26 @@ class EmployeeCanWorkAtRestaurant implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (is_array($value) && count($value) > Employee::MAX_RESTAURANT) {
-            $fail('Employee can not work at more than 3 restaurants');
+        if (!is_array($value)) {
+            $fail(trans('Invalid input'));
+        }
+        $uniqueValue = array_unique($value);
+        if (count($uniqueValue) > Employee::MAX_RESTAURANT) {
+            $fail(trans(
+                    'Employee can not work at more than :max restaurants',
+                    ['max' => Employee::MAX_RESTAURANT]
+                )
+            );
         }
         $restaurantRepo = app(IRestaurantRepository::class);
-        foreach ($value as $id) {
+        foreach ($uniqueValue as $id) {
             $foundRestaurant = $restaurantRepo->getModel()->find($id);
             if (!$foundRestaurant) {
-                $fail(sprintf('Restaurant %s not found', $id));
+                $fail(trans('Restaurant :id not found', ['id' => $id]));
                 return;
             }
             if (!$restaurantRepo->canHireNewEmployee($foundRestaurant, $this->ignoreEmployeeId)) {
-                $fail(sprintf('Restaurant %s can not hire more people', $id));
+                $fail(trans('Restaurant :id can not hire more people', ['id' => $id]));
                 return;
             }
         }

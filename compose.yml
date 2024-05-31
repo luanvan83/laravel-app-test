@@ -11,6 +11,15 @@ services:
       - DB_HOST=mysql
     links:
       - mysql
+  
+  front:
+    build:
+      context: .
+      dockerfile: docker/nodejs/Dockerfile
+    volumes:
+      - ./front:/opt/app
+    links:
+      - api
 
   nginx:
     build: ./docker/nginx

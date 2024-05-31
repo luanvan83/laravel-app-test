@@ -4,12 +4,11 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Feature\FeatureTestCase;
 use Tests\TestCase;
 
-class AuthenticationTest extends TestCase
+class AuthenticationTest extends FeatureTestCase
 {
-    use RefreshDatabase;
-
     public function test_users_can_authenticate_using_the_login_screen(): void
     {
         $user = User::factory()->create();
@@ -17,9 +16,6 @@ class AuthenticationTest extends TestCase
         $response = $this->post('/api/login', [
             'email' => $user->email,
             'password' => 'password',
-        ],[
-            'X-Requested-With' => 'XMLHttpRequest',
-            'Content-Type' => 'application/josn'
         ]);
         $json = json_decode($response->getContent());
         $this->assertTrue($json->success);

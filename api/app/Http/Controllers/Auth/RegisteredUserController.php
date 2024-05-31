@@ -20,6 +20,7 @@ class RegisteredUserController extends ApiController
      * @OA\Post(
      *     path="/api/register",
      *     summary="Handle an incoming registration request.",
+     *     tags={"Auth"},
      *     @OA\Parameter(
      *         name="name",
      *         in="query",

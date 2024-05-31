@@ -141,4 +141,5 @@ return [
         ]
     ],
 
+    'enable_query_log' => env('ENABLE_QUERY_LOG', 0),
 ];

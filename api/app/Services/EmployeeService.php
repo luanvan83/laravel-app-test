@@ -42,7 +42,7 @@ class EmployeeService
     {
         $payload = $request->only($this->employeeRepo->getModel()->getFillable());
         
-        $lWorkAtRestaurants = $request->input('restaurant_ids');
+        $lWorkAtRestaurants = array_unique($request->input('restaurant_ids'));
 
         Log::info('Before create employee', [$payload, $lWorkAtRestaurants]);
         $newEmployee = $this->employeeRepo->createEmployee($payload, $lWorkAtRestaurants);
@@ -64,7 +64,7 @@ class EmployeeService
 
         $payload = $request->only($this->employeeRepo->getModel()->getFillable());
 
-        $lWorkAtRestaurants = $request->input('restaurant_ids');
+        $lWorkAtRestaurants = array_unique($request->input('restaurant_ids'));
         
         Log::info('Before update article', [$payload, $lWorkAtRestaurants]);
 

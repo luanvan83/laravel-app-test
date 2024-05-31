@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        if (App::isProduction()) {
+        if (config('logging.enable_query_log') != 1) {
             return;
         }
 

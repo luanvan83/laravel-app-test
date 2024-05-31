@@ -22,6 +22,7 @@ class AuthenticatedController extends ApiController
      * @OA\Post(
      *     path="/api/login",
      *     summary="Handle an incoming authentication request.",
+     *     tags={"Auth"},
      *     @OA\Parameter(
      *         name="email",
      *         in="query",

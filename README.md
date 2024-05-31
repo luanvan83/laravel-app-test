@@ -1,6 +1,8 @@
 ## Test App
 
-### Design document
+### API document (Swagger)
+
+http://localhost/api/documentation
 
 ### For local development
 

@@ -7,6 +7,9 @@
     "paths": {
         "/api/login": {
             "post": {
+                "tags": [
+                    "Auth"
+                ],
                 "summary": "Handle an incoming authentication request.",
                 "operationId": "b24ea29ea6d57bd7691dc8c1aa3b44e9",
                 "parameters": [
@@ -53,6 +56,9 @@
         },
         "/api/register": {
             "post": {
+                "tags": [
+                    "Auth"
+                ],
                 "summary": "Handle an incoming registration request.",
                 "operationId": "18235ea6963e661c49bf381065779d6a",
                 "parameters": [
