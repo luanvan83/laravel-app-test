@@ -67,7 +67,7 @@ async function handleResponse(response: AxiosResponse) {
 
         if ([422].includes(response.status)) {
             // ValidationError
-            return Promise.reject(new ValidationError(data.message||'', data));
+            return Promise.reject(new ValidationError(data.message||'', data.data));
         }
 
         // get error message from body or default to response status

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { fetchWrapper } from '@/helpers/fetch-wrapper';
-import type { IRegisterDto } from '@/interfaces/user-register';
+import type { IEmployeeRegisterDto } from '@/interfaces/employee-register';
 
 const baseUrl = `${import.meta.env.VITE_API_URL}/employees`;
 
@@ -11,7 +11,7 @@ export const useEmployeesStore = defineStore({
         employee: {}
     }),
     actions: {
-        async register(employee : IRegisterDto) {
+        async register(employee : IEmployeeRegisterDto) {
             await fetchWrapper.post(`${baseUrl}`, employee);
         },
         async getAll() {
@@ -20,7 +20,7 @@ export const useEmployeesStore = defineStore({
                 const apiData = await fetchWrapper.get(baseUrl);
                 this.employees = apiData.data;
             } catch (error) {
-                this.users = { error };
+                this.employees = { error };
             }
         },
         async getById(id) {
@@ -34,13 +34,13 @@ export const useEmployeesStore = defineStore({
         async update(id, params) {
             await fetchWrapper.put(`${baseUrl}/${id}`, params);
         },
-        async delete(id) {
+        async delete(id: number) {
             // add isDeleting prop to user being deleted
             this.employees.find(x => x.id === id).isDeleting = true;
 
             await fetchWrapper.delete(`${baseUrl}/${id}`);
 
-            // remove user from list after deleted
+            // remove employees from list after deleted
             this.employees = this.employees.filter(x => x.id !== id);
         }
     }

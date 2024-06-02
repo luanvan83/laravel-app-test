@@ -17,6 +17,7 @@
     "@popperjs/core": "^2.11.8",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
     "pinia": "^2.1.7",
     "vee-validate": "^4.12.8",
     "vue": "^3.4.21",

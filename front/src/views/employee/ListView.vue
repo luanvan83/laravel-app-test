@@ -6,6 +6,8 @@ import { useRestaurantsStore } from '@/stores/restaurants.store';
 import { storeToRefs } from 'pinia';
 import { Form, Field, type FormActions, FieldArray } from 'vee-validate';
 import * as Yup from 'yup';
+import ValidationError from '@/errors/validation-error';
+import type { IEmployeeRegisterDto } from '@/interfaces/employee-register';
 
 //defineProps({
 //  msg: String
@@ -22,8 +24,12 @@ const initialize = async () => {
 };
 onMounted(() => initialize());
 
+let currentEmployeeId : number = 0;
+
 // Modal
-const closeableModal = ref(false);
+const addEmployeeModal = ref(false);
+
+const deleteConfirmModal = ref(false);
 
 // Add Employee form
 const schemaAddEmployee = Yup.object().shape({
@@ -32,27 +38,52 @@ const schemaAddEmployee = Yup.object().shape({
   lastname: Yup.string()
       .required('Firstname is required'),
   email: Yup.string()
-      .required('Email is required')
-  //restaurant_ids: Yup.array()
-  //    .required('Restaurants is required')
+      .required('Email is required'),
+  //restaurant_ids: Yup.boolean().oneOf([true], 'Restaurants is required')
+  //    .required('Restaurants is required'),
 });
 
-async function onSubmitAddEmployee(values : any, actions) {
+async function onSubmitAddEmployee(values : IEmployeeRegisterDto, actions) {
   try {
     await employeesStore.register(values);
-    closeableModal.value = false;
-    await initialize();
+    initialize();
+    addEmployeeModal.value = false;
   } catch (error : any) { 
     console.log('AddEmployeeError', error);
+    if (error instanceof ValidationError) {
+      actions.setErrors(error.getErrorFields());
+    }
   }
 }
+
+const confirmDeletion = (id: number) => {
+  currentEmployeeId = id;
+  deleteConfirmModal.value = true;
+}
+
+async function onSubmitDeleteEmployee(values : any, actions) {
+  if (currentEmployeeId <= 0) {
+    deleteConfirmModal.value = false;
+    return;
+  }
+  try {
+    await employeesStore.delete(currentEmployeeId);
+    deleteConfirmModal.value = false;
+  } catch (error : any) { 
+    console.log('DeleteEmployeeError', error);
+    if (error instanceof ValidationError) {
+      actions.setErrors(error.getErrorFields());
+    }
+  }
+}
+
 </script>
 
 <template>
   <div>
     <div class="card m-3">
       <h4 class="card-header">
-        <button @click="closeableModal = true" type="button" class="btn btn-primary">Add employee</button>
+        <button @click="addEmployeeModal = true" type="button" class="btn btn-primary">Add employee</button>
       </h4>
       <div class="card-body">
         <div class="table-responsive">
@@ -76,7 +107,9 @@ async function onSubmitAddEmployee(values : any, actions) {
                 <td>
                   <label class="bg-success rounded me-3 p-1" v-for="restaurant in employee.restaurants">{{restaurant.name}}</label>
                 </td>
-                <td></td>
+                <td>
+                  <button class="btn" @click="confirmDeletion(employee.id)"><i class="bi bi-trash red text-danger"></i></button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -84,7 +117,7 @@ async function onSubmitAddEmployee(values : any, actions) {
       </div>
     </div>
 
-    <Modal v-model="closeableModal" closeable header="Add employee">
+    <Modal v-model="addEmployeeModal" closeable header="Add employee">
       <Form @submit="onSubmitAddEmployee" :validation-schema="schemaAddEmployee" v-slot="{ errors, isSubmitting }">
         <div class="form-group">
             <label>Firtname</label>
@@ -105,10 +138,9 @@ async function onSubmitAddEmployee(values : any, actions) {
             <label>Restaurants</label>
             <div class="fomr-control">
               <span class="ms-3" v-for="restaurant in restaurants">
-
                 <Field v-slot="{ field }" name="restaurant_ids" type="checkbox" :value="restaurant.id" :unchecked-value="false">
                   <label>
-                    <input type="checkbox" name="restaurant_ids" v-bind="field" :value="restaurant.id" />
+                    <input type="checkbox" name="restaurant_ids" v-bind="field" :value="restaurant.id" :disabled="restaurant.employees_count >= 5">
                     {{restaurant.name}}
                   </label>
                 </Field>
@@ -130,5 +162,19 @@ async function onSubmitAddEmployee(values : any, actions) {
       </Form>
     </Modal> 
 
+    <Modal v-model="deleteConfirmModal" closeable header="Remove employee">
+      <Form @submit="onSubmitDeleteEmployee" v-slot="{ errors, isSubmitting }">
+        <div class="form-group">
+            <p>Are you sure?</p>
+            <Field name="id" type="hidden" class="form-control"/>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-danger mt-3" :disabled="isSubmitting">
+                <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
+                Remove
+            </button>
+        </div>
+      </Form>
+    </Modal>
   </div>
 </template>

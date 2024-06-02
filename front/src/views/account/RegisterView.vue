@@ -30,10 +30,9 @@ async function onSubmit(values : IRegisterDto, actions) {
         alertStore.success('Registration successful');
     } catch (error : any) { 
         console.log('RegisterViewError', error);
-        alertStore.error(error.message);
-        //if (error instanceof ValidationError) {
-            //actions.setErrors(error.getErrorFields());
-        //}
+        if (error instanceof ValidationError) {
+            actions.setErrors(error.getErrorFields());
+        }
     }
 }
 </script>
