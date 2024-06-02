@@ -18,6 +18,11 @@ services:
       dockerfile: docker/nodejs/Dockerfile
     volumes:
       - ./front:/opt/app
+    ports:
+      - "3000:3000"
+    environment:
+      - HOST_PORT=3000
+      - API_URL=http://localhost/api
     links:
       - api
 
