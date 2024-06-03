@@ -21,7 +21,7 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, ref } from 'vue';
 
-const backdropClick = (event) => {
+const backdropClick = (event : any) => {
     if (event.target.id == 'backdrop' && props.closeable == true) {
         emit("update:modelValue", false);
     }

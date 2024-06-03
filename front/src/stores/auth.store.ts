@@ -36,9 +36,9 @@ export const useAuthStore = defineStore({
                 } else {
                     throw new Error('Data not found');
                 }
-            } catch (error) {
+            } catch (error: any) {
                 const alertStore = useAlertStore();
-                alertStore.error(error);
+                alertStore.error(error.message);
                 return Promise.reject(error);                
             }
         },

@@ -9,14 +9,17 @@ const schema = Yup.object().shape({
     password: Yup.string().required('Password is required')
 });
 
-async function onSubmit(values, actions) {
-    
+interface ILoginDto {
+    email: string,
+    password: string
+}
+
+async function onSubmit(values : ILoginDto, actions : any) {
     const authStore = useAuthStore();
     const { email, password } = values;
     try {
         await authStore.login(email, password);
-    } catch (error) {
-        debugger;
+    } catch (error : unknown) {
         console.log('LoginViewError', error);
     }
 }
@@ -28,17 +31,17 @@ async function onSubmit(values, actions) {
             <h4 class="card-header">Login</h4>
             <div class="card-body">
                 <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors, isSubmitting }">
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label>Email</label>
                         <Field name="email" type="text" class="form-control" :class="{ 'is-invalid': errors.email }" />
                         <div class="invalid-feedback">{{ errors.email }}</div>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label>Password</label>
                         <Field name="password" type="password" class="form-control" :class="{ 'is-invalid': errors.password }" />
                         <div class="invalid-feedback">{{ errors.password }}</div>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <button class="btn btn-primary" :disabled="isSubmitting">
                             <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
                             Login

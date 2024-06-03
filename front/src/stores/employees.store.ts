@@ -7,8 +7,8 @@ const baseUrl = `${import.meta.env.VITE_API_URL}/employees`;
 export const useEmployeesStore = defineStore({
     id: 'employees',
     state: () => ({
-        employees: {},
-        employee: {}
+        employees: {} as any,
+        employee: {} as any
     }),
     actions: {
         async register(employee : IEmployeeRegisterDto) {
@@ -23,7 +23,7 @@ export const useEmployeesStore = defineStore({
                 this.employees = { error };
             }
         },
-        async getById(id) {
+        async getById(id: number) {
             this.employee = { loading: true };
             try {
                 this.employee = await fetchWrapper.get(`${baseUrl}/${id}`);
@@ -31,17 +31,17 @@ export const useEmployeesStore = defineStore({
                 this.employee = { error };
             }
         },
-        async update(id, params) {
+        async update(id: number, params: any) {
             await fetchWrapper.put(`${baseUrl}/${id}`, params);
         },
         async delete(id: number) {
             // add isDeleting prop to user being deleted
-            this.employees.find(x => x.id === id).isDeleting = true;
+            this.employees.find((x : any) => x.id === id).isDeleting = true;
 
             await fetchWrapper.delete(`${baseUrl}/${id}`);
 
             // remove employees from list after deleted
-            this.employees = this.employees.filter(x => x.id !== id);
+            this.employees = this.employees.filter((x : any) => x.id !== id);
         }
     }
 });

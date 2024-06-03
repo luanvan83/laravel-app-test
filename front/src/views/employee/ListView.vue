@@ -8,6 +8,7 @@ import { Form, Field, type FormActions, FieldArray } from 'vee-validate';
 import * as Yup from 'yup';
 import ValidationError from '@/errors/validation-error';
 import type { IEmployeeRegisterDto } from '@/interfaces/employee-register';
+import { setFieldErrors } from '@/helpers/helpers';
 
 //defineProps({
 //  msg: String
@@ -43,16 +44,14 @@ const schemaAddEmployee = Yup.object().shape({
   //    .required('Restaurants is required'),
 });
 
-async function onSubmitAddEmployee(values : IEmployeeRegisterDto, actions) {
+async function onSubmitAddEmployee(values : IEmployeeRegisterDto, actions : any) {
   try {
     await employeesStore.register(values);
     initialize();
     addEmployeeModal.value = false;
   } catch (error : any) { 
     console.log('AddEmployeeError', error);
-    if (error instanceof ValidationError) {
-      actions.setErrors(error.getErrorFields());
-    }
+    setFieldErrors(actions, error);
   }
 }
 
@@ -61,7 +60,7 @@ const confirmDeletion = (id: number) => {
   deleteConfirmModal.value = true;
 }
 
-async function onSubmitDeleteEmployee(values : any, actions) {
+async function onSubmitDeleteEmployee(values : any, actions : any) {
   if (currentEmployeeId <= 0) {
     deleteConfirmModal.value = false;
     return;
@@ -119,22 +118,22 @@ async function onSubmitDeleteEmployee(values : any, actions) {
 
     <Modal v-model="addEmployeeModal" closeable header="Add employee">
       <Form @submit="onSubmitAddEmployee" :validation-schema="schemaAddEmployee" v-slot="{ errors, isSubmitting }">
-        <div class="form-group">
+        <div class="mb-2">
             <label>Firtname</label>
             <Field name="firstname" type="text" class="form-control" :class="{ 'is-invalid': errors.firstname }" />
             <div class="invalid-feedback">{{ errors.firstname }}</div>
         </div>
-        <div class="form-group">
+        <div class="mb-2">
             <label>Lastname</label>
             <Field name="lastname" type="text" class="form-control" :class="{ 'is-invalid': errors.lastname }" />
             <div class="invalid-feedback">{{ errors.lastname }}</div>
         </div>
-        <div class="form-group">
+        <div class="mb-2">
             <label>Email</label>
             <Field name="email" type="text" class="form-control" :class="{ 'is-invalid': errors.email }" />
             <div class="invalid-feedback">{{ errors.email }}</div>
         </div>
-        <div class="form-group">
+        <div class="mb-2">
             <label>Restaurants</label>
             <div class="fomr-control">
               <span class="ms-3" v-for="restaurant in restaurants">
@@ -148,13 +147,13 @@ async function onSubmitDeleteEmployee(values : any, actions) {
             </div>
             <div class="invalid-feedback">{{ errors.restaurant_ids }}</div>
         </div>
-        <div class="form-group">
+        <div class="mb-2">
             <label>Note</label>
             <Field name="note" type="textarea" class="form-control" :class="{ 'is-invalid': errors.note }" />
             <div class="invalid-feedback">{{ errors.note }}</div>
         </div>
-        <div class="form-group">
-            <button class="btn btn-primary mt-3" :disabled="isSubmitting">
+        <div class="">
+            <button class="btn btn-primary" :disabled="isSubmitting">
                 <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
                 Add
             </button>
@@ -164,11 +163,11 @@ async function onSubmitDeleteEmployee(values : any, actions) {
 
     <Modal v-model="deleteConfirmModal" closeable header="Remove employee">
       <Form @submit="onSubmitDeleteEmployee" v-slot="{ errors, isSubmitting }">
-        <div class="form-group">
+        <div class="mb-3">
             <p>Are you sure?</p>
             <Field name="id" type="hidden" class="form-control"/>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
             <button class="btn btn-danger mt-3" :disabled="isSubmitting">
                 <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
                 Remove

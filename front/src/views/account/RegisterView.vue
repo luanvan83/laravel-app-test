@@ -7,6 +7,7 @@ import { useAlertStore } from '@/stores/alert.store';
 import router from '@/router/index';
 import type { IRegisterDto } from '@/interfaces/user-register';
 import ValidationError from '@/errors/validation-error';
+import { setFieldErrors } from '@/helpers/helpers';
 
 const schema = Yup.object().shape({
     name: Yup.string()
@@ -21,7 +22,7 @@ const schema = Yup.object().shape({
         .min(8, 'Password confirmation must be at least 8 characters')
 });
 
-async function onSubmit(values : IRegisterDto, actions) {
+async function onSubmit(values : IRegisterDto, actions : any) {
     const usersStore = useUsersStore();
     const alertStore = useAlertStore();
     try {
@@ -30,9 +31,7 @@ async function onSubmit(values : IRegisterDto, actions) {
         alertStore.success('Registration successful');
     } catch (error : any) { 
         console.log('RegisterViewError', error);
-        if (error instanceof ValidationError) {
-            actions.setErrors(error.getErrorFields());
-        }
+        setFieldErrors(actions, error);
     }
 }
 </script>
@@ -43,27 +42,27 @@ async function onSubmit(values : IRegisterDto, actions) {
             <h4 class="card-header">Register</h4>
             <div class="card-body">
                 <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors, isSubmitting }">
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label>Name</label>
                         <Field name="name" type="text" class="form-control" :class="{ 'is-invalid': errors.name }" />
                         <div class="invalid-feedback">{{ errors.name }}</div>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label>Email</label>
                         <Field name="email" type="text" class="form-control" :class="{ 'is-invalid': errors.email }" />
                         <div class="invalid-feedback">{{ errors.email }}</div>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label>Password</label>
                         <Field name="password" type="password" class="form-control" :class="{ 'is-invalid': errors.password }" />
                         <div class="invalid-feedback">{{ errors.password }}</div>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label>Password confirmation</label>
                         <Field name="password_confirmation" type="password" class="form-control" :class="{ 'is-invalid': errors.password_confirmation }" />
                         <div class="invalid-feedback">{{ errors.password_confirmation }}</div>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <button class="btn btn-primary" :disabled="isSubmitting">
                             <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
                             Register

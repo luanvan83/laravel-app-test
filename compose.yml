@@ -11,20 +11,6 @@ services:
       - DB_HOST=mysql
     links:
       - mysql
-  
-  front:
-    build:
-      context: .
-      dockerfile: docker/nodejs/Dockerfile
-    volumes:
-      - ./front:/opt/app
-    ports:
-      - "3000:3000"
-    environment:
-      - HOST_PORT=3000
-      - API_URL=http://localhost/api
-    links:
-      - api
 
   nginx:
     build: ./docker/nginx
@@ -48,3 +34,19 @@ services:
     volumes:
       - ./docker/storage/mysql:/var/lib/mysql
       - ./docker/mysql/custom:/etc/mysql/conf.d
+
+  front:
+    build:
+      context: .
+      dockerfile: ./docker/nodejs/Dockerfile
+      args:
+        - SERVICE_NAME=front
+    volumes:
+      - ./front:/opt/app
+    ports:
+      - "3000:3000"
+    environment:
+      - HOST_PORT=3000
+      - API_URL=http://localhost/api
+    links:
+      - api
