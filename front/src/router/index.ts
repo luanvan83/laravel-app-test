@@ -16,17 +16,24 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: LoginView
+      component: LoginView,
+      meta: {
+        title: 'Login - Vue app'
+      }
     },
     {
       path: '/register',
       name: 'register',
-      component: RegisterView
+      component: RegisterView,
+      meta: {
+        title: 'Register - Vue app'
+      }
     }
   ]
 })
 
 router.beforeEach(async (to) => {
+  document.title = (to.meta?.title ?? 'Vue app') as string;
   // clear alert on route change
   const alertStore = useAlertStore();
   alertStore.clear();
