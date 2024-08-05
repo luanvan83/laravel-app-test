@@ -33,6 +33,9 @@ class EmployeeCanWorkAtRestaurant implements ValidationRule
                 )
             );
         }
+        /**
+         * @var \App\Repositories\RestaurantRepository
+         */
         $restaurantRepo = app(IRestaurantRepository::class);
         foreach ($uniqueValue as $id) {
             $foundRestaurant = $restaurantRepo->getModel()->find($id);

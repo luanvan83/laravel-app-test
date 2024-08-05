@@ -23,9 +23,6 @@ class FindPath extends Command implements PromptsForMissingInput
      */
     protected $description = 'Find path {from} city {to} city';
 
-    protected $departure = null;
-    protected $destination = null;
-
     protected $lPassedCities = [];
 
     public $lPaths = [
@@ -187,8 +184,9 @@ class FindPath extends Command implements PromptsForMissingInput
         Log::info('Cal for '.$name);
         $passedName = '';
         $lPossilbePaths = $this->findPossiblePaths($name);
-        $passCost = 0;
-        if ($this->departure === $name) {
+        $baseCost = 0;
+        //if ($this->departure === $name) {
+        if ($this->lPassedCities->count() === 0) {
             // root node
             $node = $this->newNode($name, 0, null, true);
             $this->lPassedCities->push($node);
@@ -201,13 +199,13 @@ class FindPath extends Command implements PromptsForMissingInput
                 $data = $nodes->first();
                 $data['passed'] = true;
                 $this->lPassedCities->put($key, $data);
-                $passCost = $data['cost'];
+                $baseCost = $data['cost'];
             }
         }
 
         foreach ($lPossilbePaths as &$path) {
             $neighbourName = ($path['from'] === $name) ? $path['to'] : $path['from'];
-            $thisCost = $passCost + $path['travel_cost'] + $path['transit_cost'];
+            $thisCost = $baseCost + $path['travel_cost'] + $path['transit_cost'];
 
             $nodes = $this->getCalculatedNotPassedNodes($neighbourName);
             if (count($nodes) > 0) {
@@ -254,7 +252,7 @@ class FindPath extends Command implements PromptsForMissingInput
         return $lFoundPaths;
     }
 
-    protected function checkCity($name)
+    protected function checkCity($name) : bool
     {
         $lFoundPaths = $this->findPossiblePaths($name);
         return count($lFoundPaths) > 0;
@@ -313,10 +311,13 @@ class FindPath extends Command implements PromptsForMissingInput
             echo 'Invalid destination'. PHP_EOL;
             return;
         }
-        $this->departure = $from;
-        $this->destination = $to;
+
+        $tsStart = microtime(true);
+
+        // Root node
         $this->calcPathCostFor($from);
 
+        // Next nodes
         $nextRoot = $from;
         while ($nextRoot != $to) {
             $nextRoot = $this->getNextMinNode();
@@ -325,7 +326,6 @@ class FindPath extends Command implements PromptsForMissingInput
   
         $lRealPassedCities = $this->lPassedCities->where('passed', true);
         $loop = true;
-        $routes = [];
         $all = [];
         $prev = null;
         while ($loop) {
@@ -339,6 +339,15 @@ class FindPath extends Command implements PromptsForMissingInput
             }
             $prev = $step['via'];
         }
-        dd(array_reverse($all));
+        $finalRoutes = array_reverse($all);
+
+        $tsEnd = microtime(true);
+        Log::info('End ', [
+            'tsStart' => $tsStart,
+            'tsEnd' => $tsEnd,
+            'ms' => $tsEnd - $tsStart
+        ]);
+
+        dd($finalRoutes);
     }
 }

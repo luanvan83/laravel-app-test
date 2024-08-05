@@ -153,7 +153,7 @@ async function onSubmitDeleteEmployee(values : any, actions : any) {
             <div class="invalid-feedback">{{ errors.note }}</div>
         </div>
         <div class="">
-            <button class="btn btn-primary" :disabled="isSubmitting">
+            <button class="btn btn-primary px-5" :disabled="isSubmitting">
                 <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
                 Add
             </button>
